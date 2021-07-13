@@ -1,8 +1,9 @@
 package goconfig
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
+	"reflect"
 	"strconv"
 
 	ini "gopkg.in/ini.v1"
@@ -12,20 +13,28 @@ func init() {
 	ini.PrettyFormat = false
 }
 
-// Save uses the same json taggers but convert it to INI for readability
+// Save convert to INI for readability
 func Save(v interface{}, saveTo string) error {
-	var b []byte
-	// marshal to json then to map
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-	// unmarshal to map
 	kv := make(map[string]interface{})
-	err = json.Unmarshal(b, &kv)
-	if err != nil {
-		return err
+	typ := reflect.TypeOf(v)
+	val := reflect.ValueOf(v)
+	switch typ.Kind() {
+	case reflect.Ptr:
+		typ = typ.Elem()
 	}
+	if typ.Kind() != reflect.Struct {
+		return errors.New("only structs are supported")
+	}
+
+	for i := 0; i < typ.NumField(); i++ {
+		field := typ.Field(i)
+		fieldName := ini.TitleUnderscore(field.Name)
+		fieldvalue := val.Field(i)
+		if fieldvalue.CanInterface() {
+			kv[fieldName] = fieldvalue.Interface()
+		}
+	}
+
 	// iterate over map setting key => value in ini file
 	cfg := ini.Empty()
 	for k, v := range kv {
