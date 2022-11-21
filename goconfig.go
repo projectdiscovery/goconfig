@@ -28,7 +28,10 @@ func Save(v interface{}, saveTo string) error {
 		default:
 			data = fmt.Sprint(v)
 		}
-		cfg.Section("").NewKey(k, data)
+		_, err := cfg.Section("").NewKey(k, data)
+		if err != nil {
+			return err
+		}
 	}
 	return cfg.SaveTo(saveTo)
 }
