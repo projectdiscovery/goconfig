@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/projectdiscovery/reflectutil"
+	reflectutil "github.com/projectdiscovery/utils/reflect"
 	ini "gopkg.in/ini.v1"
 )
 
