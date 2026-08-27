@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/projectdiscovery/utils v0.0.51
-	github.com/stretchr/testify v1.8.4
-	gopkg.in/ini.v1 v1.67.0
+	github.com/stretchr/testify v1.11.1
+	gopkg.in/ini.v1 v1.67.3
 )
 
 require (
