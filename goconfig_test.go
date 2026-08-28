@@ -22,10 +22,12 @@ func TestFlow(t *testing.T) {
 
 	// Save the struct to file
 	fname := f.Name()
-	f.Close()
+	_ = f.Close()
 
 	// cleanup the file on exit
-	defer os.Remove(fname)
+	defer func() {
+		_ = os.Remove(fname)
+	}()
 
 	// marshal to temporary file
 	err = Save(testStruct, fname)
